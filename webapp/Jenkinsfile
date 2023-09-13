@@ -2,26 +2,26 @@ pipeline {
   agent any
 
   options {
-    timeout(time: 2, unit: 'MINUTES')
+    timeout(time: 2, unit: 'MINUTES') #Tiempo que puede durar los test
   }
 
   environment {
-    ARTIFACT_ID = "elbuo8/webapp:${env.BUILD_NUMBER}"
+    ARTIFACT_ID = "htillero/webapp:${env.BUILD_NUMBER}" #Se define el ARTIFACT_ID
   }
 
   stages {
     stage('Build') {
       steps {
         script {
-          dir("webapp") {
-            dockerImage = docker.build "${env.ARTIFACT_ID}"
+          dir("webapp") { #Entra al directorio webapp
+            dockerImage = docker.build "${env.ARTIFACT_ID}" #Se hace el build usando el ARTIFACT_ID y lo guardas en la variable dockerImage (comando nativo de jenkins)
           }
         }
       }
     }
     stage('Run tests') {
       steps {
-        sh "docker run ${dockerImage.id} npm test"
+        sh "docker run ${dockerImage.id} npm test" #Comando shell usando la variable dockerImage
       }
     }
     stage('Publish') {
